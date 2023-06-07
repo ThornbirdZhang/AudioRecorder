@@ -16,14 +16,19 @@
 
 package com.dimowner.audiorecorder;
 
+import android.Manifest;
 import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.dimowner.audiorecorder.audio.player.PlayerContractNew;
 import com.dimowner.audiorecorder.data.Prefs;

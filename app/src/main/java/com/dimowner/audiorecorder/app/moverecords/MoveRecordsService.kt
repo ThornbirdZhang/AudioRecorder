@@ -260,6 +260,10 @@ class MoveRecordsService : Service() {
 	private fun getCancelMovePendingIntent(context: Context): PendingIntent {
 		val intent = Intent(context, StopMoveRecordsReceiver::class.java)
 		intent.action = ACTION_CANCEL_MOVE_RECORDS
+		//return PendingIntent.getBroadcast(context, 318, intent, 0)
+		val currentApiVersion = Build.VERSION.SDK_INT
+		if (currentApiVersion >= Build.VERSION_CODES.S)
+			return PendingIntent.getBroadcast(context, 318, intent, PendingIntent.FLAG_IMMUTABLE)
 		return PendingIntent.getBroadcast(context, 318, intent, 0)
 	}
 

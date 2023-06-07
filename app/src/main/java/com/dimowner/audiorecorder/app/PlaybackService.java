@@ -16,6 +16,8 @@
 
 package com.dimowner.audiorecorder.app;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -164,7 +166,12 @@ public class PlaybackService extends Service {
 		// Create notification default intent.
 		Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
-		contentPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+
+		int currentApiVersion = Build.VERSION.SDK_INT;
+		if(currentApiVersion >= Build.VERSION_CODES.S)
+			contentPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, FLAG_IMMUTABLE);
+		else
+			contentPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
 		startForeground(NOTIF_ID, buildNotification());
 		started = true;
 	}
@@ -202,6 +209,10 @@ public class PlaybackService extends Service {
 	protected PendingIntent getPendingSelfIntent(Context context, String action) {
 		Intent intent = new Intent(context, StopPlaybackReceiver.class);
 		intent.setAction(action);
+		//return PendingIntent.getBroadcast(context, 10, intent, 0);
+		int currentApiVersion = Build.VERSION.SDK_INT;
+		if(currentApiVersion >= Build.VERSION_CODES.S)
+			return PendingIntent.getBroadcast(context, 10, intent, FLAG_IMMUTABLE);
 		return PendingIntent.getBroadcast(context, 10, intent, 0);
 	}
 

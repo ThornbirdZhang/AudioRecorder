@@ -16,6 +16,8 @@
 
 package com.dimowner.audiorecorder.app;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -239,6 +241,10 @@ public class DownloadService extends Service {
 	protected PendingIntent getPendingSelfIntent(Context context, String action) {
 		Intent intent = new Intent(context, StopDownloadReceiver.class);
 		intent.setAction(action);
+		//return PendingIntent.getBroadcast(context, 10, intent, 0);
+		int currentApiVersion = Build.VERSION.SDK_INT;
+		if(currentApiVersion >= Build.VERSION_CODES.S)
+			return PendingIntent.getBroadcast(context, 10, intent, FLAG_IMMUTABLE);
 		return PendingIntent.getBroadcast(context, 10, intent, 0);
 	}
 

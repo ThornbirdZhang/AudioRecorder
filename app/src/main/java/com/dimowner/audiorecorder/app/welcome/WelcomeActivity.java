@@ -16,10 +16,14 @@
 
 package com.dimowner.audiorecorder.app.welcome;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -31,6 +35,8 @@ import com.dimowner.audiorecorder.app.setup.SetupActivity;
 import com.dimowner.audiorecorder.util.AndroidUtils;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 /**
@@ -82,6 +88,16 @@ public class WelcomeActivity extends Activity implements WelcomeContract.View {
 //		pageIndicator = findViewById(R.id.pageIndicator);
 		adapter = new WelcomePagerAdapter();
 		pager.setAdapter(adapter);
+		//acquire privilige
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+				== PackageManager.PERMISSION_GRANTED) {
+				Toast.makeText(this, "got phone state.", Toast.LENGTH_SHORT);
+		} else {
+			// 请求权限
+			ActivityCompat.requestPermissions(this,
+					new String[]{Manifest.permission.READ_PHONE_STATE},
+					1000);
+		}
 //		pagerPager = new ViewPagerPager(pager);
 //		pageIndicator.setViewPager(pager);
 //		final int width = AndroidUtils.getScreenWidth(getApplicationContext());

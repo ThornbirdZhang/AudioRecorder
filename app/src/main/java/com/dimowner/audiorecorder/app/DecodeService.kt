@@ -17,6 +17,7 @@
 package com.dimowner.audiorecorder.app
 
 import android.app.*
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -201,7 +202,12 @@ class DecodeService : Service() {
 		// Create notification default intent.
 		val intent = Intent(applicationContext, MainActivity::class.java)
 		intent.flags = Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP
-		contentPendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, 0)
+		//contentPendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, 0)
+		val currentApiVersion = Build.VERSION.SDK_INT
+		if (currentApiVersion >= Build.VERSION_CODES.S)
+			contentPendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, FLAG_IMMUTABLE)
+		else
+			contentPendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, 0)
 		startForeground(NOTIF_ID, buildNotification())
 	}
 
@@ -234,6 +240,9 @@ class DecodeService : Service() {
 	private fun getCancelDecodePendingIntent(context: Context): PendingIntent {
 		val intent = Intent(context, StopDecodeReceiver::class.java)
 		intent.action = ACTION_CANCEL_DECODE
+		val currentApiVersion = Build.VERSION.SDK_INT
+		if (currentApiVersion >= Build.VERSION_CODES.S)
+				return PendingIntent.getBroadcast(context, 15, intent, PendingIntent.FLAG_IMMUTABLE)
 		return PendingIntent.getBroadcast(context, 15, intent, 0)
 	}
 
